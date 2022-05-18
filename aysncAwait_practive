@@ -1,0 +1,93 @@
+// These scripts can be run using the index.html file
+// Navigate to the file path and type 
+// " Start index.html "
+
+//  --- Callbacks --------------------------------
+ 
+ const posts = [
+     {title: "Post 1", body: "This is the first post"},
+     {title: "Post 2", body: "This is the second post"}
+ ] // This is an array of posts
+
+
+ function get_Posts() {
+     setTimeout(() => {
+        let output = ''
+        posts.forEach((post, index) => {
+            output += `<li>${post.title}</li>`
+        } )
+        document.body.innerHTML = output
+     }, 1000)
+ } // We set a timeout to 1 second and ran a forEach loop to get the posts and create an HTML list item
+
+ 
+
+ function create_Post(post, callback) {
+     setTimeout(() => {
+        posts.push(post)
+        callback()
+     }, 2000)
+ } // in this function we are creating a new post, with a timeout of 2 seconds, the function takes in the post and a callback. The name "Callback" is really just a placeholder for the getPosts function that we will put in when we run the function below. 
+
+//  create_Post({ title: "Post 3", body: "This is the third post"}, get_Posts)
+
+//  --- Promises --------------------------------
+ 
+function getPosts() {
+    setTimeout(() => {
+       let output = ''
+       posts.forEach((post, index) => {
+           output += `<li>${post.title}</li>`
+       } )
+       document.body.innerHTML = output
+    }, 1000)
+} // We set a timeout to 1 second and ran a forEach loop to get the posts and create an HTML list item
+
+
+
+function createPost(post) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            posts.push(post)
+            const error = false
+
+            if(!error) {
+                resolve()
+            } else {
+                reject('error something went terribly wrong!')
+            }
+         }, 2000)
+    })
+} // New promise takes in resolve and reject we return the promise if there are no errors, if there are then we return the error.
+
+// createPost({ title: 'Post 3', body: 'This is the third post'}).then(getPosts).catch(err => console.log(err))
+
+// the createPost function will need to be run with the .then(getPosts) it will also need to catch and console.log the error message. 
+
+//  --- Async/Await --------------------------------
+
+async function init () {
+   await createPost({ title: 'Post 3', body: 'This is the third post'})
+
+   getPosts()
+   fetchUsers()
+}
+
+init()
+
+//  --- Async/Await w/ fetch ---------------------------
+
+async function fetchUsers() {
+    const response = await fetch ('https://jsonplaceholder.typicode.com/users')
+
+    const data = await response.json()
+
+    console.log(data)
+    let output = ''
+    data.forEach((user, index) => {
+        output += `<li>${user.name} + ${user.email}</li>`
+    } )
+    document.body.innerHTML = output
+
+}
+
